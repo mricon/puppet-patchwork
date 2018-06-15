@@ -48,11 +48,18 @@ class patchwork::uwsgi {
     }
   }
 
+  package { $patchwork::uwsgi_plugin_package:
+    ensure => present,
+  }
+
   uwsgi::app { 'patchwork':
     ensure              => 'present',
     uid                 => $patchwork::user,
     gid                 => $patchwork::group,
     application_options => $patchwork::uwsgi_config,
+    require             => [
+      Package[$patchwork::uwsgi_plugin_package],
+    ],
   }
 
 }

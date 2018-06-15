@@ -5,7 +5,6 @@ describe 'patchwork', :type => 'class' do
     context 'with defaults for all parameters' do
       it { should contain_class('git') }
       it { should contain_class('python') }
-      it { should contain_class('mysql::server') }
       # Uncomment this once the mysql module has been updated
       #it { should contain_class('mysql::bindings::daemon_dev') }
       # Remove the following check once mysql has been updated
@@ -43,42 +42,18 @@ describe 'patchwork', :type => 'class' do
           'source' => 'puppet:///modules/patchwork/logrotate.d/patchwork',
         })
       }
-      it { should contain_python__virtualenv('/opt/patchwork/venv')
+      it { should contain_python__pyvenv('/opt/patchwork/venv')
         .with({
           'owner'        => 'patchwork',
           'group'        => 'patchwork',
         })
       }
-      it { should contain_python__pip('Django')
+      it { should contain_python__requirements('/opt/patchwork/requirements-prod.txt')
         .with({
-          'pkgname'    => 'Django',
           'virtualenv' => '/opt/patchwork/venv',
           'owner'      => 'patchwork',
-          'ensure'     => '1.8.9',
         })
       }
-      it { should contain_python__pip('MySQL-Python')
-        .with({
-          'pkgname'    => 'MySQL-Python',
-          'virtualenv' => '/opt/patchwork/venv',
-          'owner'      => 'patchwork',
-          'ensure'     => '1.2.5',
-        })
-      }
-      it { should contain_python__pip('python-dateutil')
-        .with({
-          'pkgname'    => 'python-dateutil',
-          'virtualenv' => '/opt/patchwork/venv',
-          'owner'      => 'patchwork',
-          'ensure'     => '1.5',
-        })
-      }
-    end
-    context 'with unmanaged git' do
-      let(:params) {{
-        :manage_git => false,
-      }}
-      it { should_not contain_class('git') }
     end
     context 'with unmanaged database' do
       let(:params) {{
@@ -87,20 +62,6 @@ describe 'patchwork', :type => 'class' do
       it { should_not contain_class('mysql::server') }
       it { should contain_package('mysql-daemon_dev') }
       it { should contain_class('mysql::bindings') }
-    end
-    context 'with unmanaged python' do
-      let(:params) {{
-        :manage_python => false,
-      }}
-      it { should_not contain_class('python')
-        .with({
-          'version'    => 'system',
-          'dev'        => true,
-          'pip'        => true,
-          'virtualenv' => true,
-          'gunicorn'   => false,
-        })
-      }
     end
     context 'with specific patchwork version' do
       let(:params) {{
@@ -138,7 +99,7 @@ describe 'patchwork', :type => 'class' do
         .with({
           'ensure' => 'present',
           'source' => 'git://github.com/getpatchwork/patchwork',
-          'revision' => 'v1.0.0',
+          'revision' => 'v2.1.0',
           'user'     => 'patchwork-user',
           'group'    => 'patchwork-group',
         })

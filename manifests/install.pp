@@ -23,14 +23,11 @@
 #  limitations under the License.
 #
 class patchwork::install {
+  include ::git
 
-  if ($patchwork::manage_git) {
-    include ::git
-  }
-
-  if ($patchwork::manage_python) {
+  if $patchwork::manage_python {
     class { '::python':
-      version    => 'system',
+      version    => $patchwork::python_package,
       dev        => true,
       pip        => true,
       virtualenv => true,
@@ -38,20 +35,26 @@ class patchwork::install {
     }
   }
 
-  if ($patchwork::manage_database) {
-    include ::mysql::server
+  # Create a virtualenv and install patchwork's requirements.txt
+  python::pyvenv { $patchwork::virtualenv_dir:
+    version => $patchwork::python_version,
+    owner   => $patchwork::user,
+    group   => $patchwork::group,
+    require => [
+      Class['::python'],
+      Vcsrepo[$patchwork::install_dir],
+    ],
   }
 
-  # Manually install mariadb-devel until mysql module updates with the code
-  # that fixes this.
-  #  include '::mysql::bindings::daemon_dev'
-  package { 'mysql-daemon_dev':
-    ensure => 'present',
-    name   => 'mariadb-devel',
-  }
-  # Install mysql python bindings
-  class { '::mysql::bindings':
-    python_enable => true,
+  python::requirements { '/opt/patchwork/requirements-prod.txt':
+    virtualenv => $patchwork::virtualenv_dir,
+    owner      => $patchwork::user,
+    group      => $patchwork::group,
+    require    => [
+      Class['::python'],
+      Python::Pyvenv[$patchwork::virtualenv_dir],
+      Vcsrepo[$patchwork::install_dir],
+    ],
   }
 
   # If 'latest' version is given the repo will track master and keep up
@@ -95,49 +98,6 @@ class patchwork::install {
   file { '/etc/logrotate.d/patchwork':
     ensure => 'file',
     source => 'puppet:///modules/patchwork/logrotate.d/patchwork',
-  }
-
-  # Creat a virtualenv and install patchwork's requirements.txt
-  python::virtualenv { $patchwork::virtualenv_dir:
-    owner   => $patchwork::user,
-    group   => $patchwork::group,
-    require => [
-      Class['python'],
-      Vcsrepo[$patchwork::install_dir],
-    ],
-  }
-
-  python::pip { 'MySQL-Python':
-    ensure     => '1.2.5',
-    pkgname    => 'MySQL-Python',
-    virtualenv => $patchwork::virtualenv_dir,
-    owner      => $patchwork::user,
-    require    => [
-      Class['python'],
-      Python::Virtualenv[$patchwork::virtualenv_dir],
-    ],
-  }
-
-  python::pip { 'python-dateutil':
-    ensure     => '1.5',
-    pkgname    => 'python-dateutil',
-    virtualenv => $patchwork::virtualenv_dir,
-    owner      => $patchwork::user,
-    require    => [
-      Class['python'],
-      Python::Virtualenv[$patchwork::virtualenv_dir],
-    ],
-  }
-
-  python::pip { 'Django':
-    ensure     => '1.8.9',
-    pkgname    => 'Django',
-    virtualenv => $patchwork::virtualenv_dir,
-    owner      => $patchwork::user,
-    require    => [
-      Class['python'],
-      Python::Virtualenv[$patchwork::virtualenv_dir],
-    ],
   }
 
 }

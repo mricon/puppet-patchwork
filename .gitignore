@@ -43,3 +43,5 @@ spec/fixtures/modules/
 
 # Patchwork reference
 patchwork-clone/
+
+*.lock

@@ -2,7 +2,11 @@
 This file is managed by Puppet
 """
 
-from base import *
+from __future__ import absolute_import
+
+import os
+
+from .base import *  # noqa
 
 #
 # Core settings:
@@ -50,10 +54,14 @@ LANGUAGE_CODE = '<%= @language_code %>'
 
 DATABASES = {
     'default': {
+<%- if @database_flavor == 'mysql' -%>
         'ENGINE': 'django.db.backends.mysql',
+<%- else -%>
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+<%- end -%>
         'NAME': '<%= @database_name -%>',
         'HOST': '<%= @database_host -%>',
-        'PORT': '3306',
+        'PORT': '<%= @database_port -%>',
         'USER': '<%= @database_user -%>',
         'PASSWORD': '<%= @database_pass -%>',
     },

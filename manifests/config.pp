@@ -109,34 +109,25 @@
 #  limitations under the License.
 #
 class patchwork::config (
-  $secret_key         = undef,
-  $time_zone          = 'Etc/UTC',
-  $language_code      = 'en_US',
-  $patches_per_page   = '100',
-  $enable_xmlrpc      = 'False',
-  $force_https_links  = 'False',
-  $from_email         = 'Patchwork <patchwork@patchwork.example.com>',
-  $cache_backend      = 'django.core.cache.backends.locmem.LocMemCache',
-  $cache_location     = [],
-  $cache_timeout      = '300',
-  $cache_options      = {},
-  $admins             = {},
-  $allowed_hosts      = [],
-  $notification_delay = $patchwork::cron_minutes,
+  String               $secret_key         = '__default_value',
+  String               $time_zone          = 'Etc/UTC',
+  String               $language_code      = 'en_US',
+  String               $patches_per_page   = '100',
+  Enum['False','True'] $enable_xmlrpc      = 'False',
+  Enum['False','True'] $force_https_links  = 'False',
+  String               $from_email         = 'Patchwork <patchwork@patchwork.example.com>',
+  String               $cache_backend      = 'django.core.cache.backends.locmem.LocMemCache',
+  Array                $cache_location     = [],
+  String               $cache_timeout      = '300', # positive int, or String: 'None'
+  Hash                 $cache_options      = {},
+  Hash                 $admins             = {},
+  Array                $allowed_hosts      = [],
+  String               $notification_delay = $patchwork::cron_minutes,
 ) inherits patchwork {
 
-  validate_string($secret_key)
-  validate_string($time_zone)
-  validate_string($patches_per_page)
-  validate_string($enable_xmlrpc)
-  validate_string($force_https_links)
-  validate_string($cache_backend)
-  validate_array($cache_location)
-  validate_string($cache_timeout) # positive int, or String: 'None'
-  validate_hash($cache_options)
-  validate_string($from_email)
-  validate_hash($admins)
-  validate_array($allowed_hosts)
+  if $secret_key == '__default_value' {
+    fail('You MUST set secret_key to a non-default value')
+  }
 
   file { "${patchwork::install_dir}/patchwork/settings/production.py":
     ensure    => file,
@@ -146,13 +137,4 @@ class patchwork::config (
     content   => template("${module_name}/settings.py.erb"),
     show_diff => false,
   }
-
-  file { "${patchwork::install_dir}/patchwork.wsgi":
-    ensure => file,
-    mode   => '0644',
-    owner  => $patchwork::user,
-    group  => $patchwork::group,
-    source => 'puppet:///modules/patchwork/patchwork.wsgi',
-  }
-
 }

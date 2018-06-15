@@ -23,22 +23,48 @@
 #  limitations under the License.
 #
 class patchwork::database::mysql {
-  include patchwork
+  include ::patchwork
 
-  if ($patchwork::collect_exported) {
-    @@mysql::db { "patchwork_${::fqdn}":
-      user     => $patchwork::database_user,
-      password => $patchwork::database_pass,
-      dbname   => $patchwork::database_name,
-      host     => $::ipaddress,
-      tag      => $patchwork::database_tag,
-    }
-  } else {
-    mysql::db { 'patchwork':
-      ensure   => 'present',
-      user     => $patchwork::database_user,
-      password => $patchwork::database_pass,
-      host     => $::ipaddress,
+  # Manually install mariadb-devel until mysql module updates with the code
+  # that fixes this.
+  #  include '::mysql::bindings::daemon_dev'
+  package { 'mysql-daemon_dev':
+    ensure => 'present',
+    name   => 'mariadb-devel',
+  }
+  # Install mysql python bindings
+  class { '::mysql::bindings':
+    python_enable => true,
+  }
+
+  python::pip { 'MySQL-Python':
+    ensure     => '1.2.5',
+    pkgname    => 'MySQL-Python',
+    virtualenv => $patchwork::virtualenv_dir,
+    owner      => $patchwork::user,
+    require    => [
+      Class['python'],
+      Python::Pyvenv[$patchwork::virtualenv_dir],
+    ],
+  }
+
+  if $patchwork::manage_database {
+    if $patchwork::collect_exported {
+      @@mysql::db { "patchwork_${::fqdn}":
+        user     => $patchwork::database_user,
+        password => $patchwork::database_pass,
+        dbname   => $patchwork::database_name,
+        host     => $::ipaddress,
+        tag      => $patchwork::database_tag,
+      }
+    } else {
+      include ::mysql::server
+      mysql::db { 'patchwork':
+        ensure   => 'present',
+        user     => $patchwork::database_user,
+        password => $patchwork::database_pass,
+        host     => $::ipaddress,
+      }
     }
   }
 }

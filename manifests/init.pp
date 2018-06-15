@@ -41,18 +41,6 @@
 #
 #   Default: 'git://github.com/getpatchwork/patchwork'
 #
-# [*manage_git*]
-#   Installs git. Git is required for cloning patchwork.
-#
-#   Default: true
-#
-# [*manage_python*]
-#   Installs python, python development libraries, pip, and virtualenv.
-#   Required for creating the patchwork virtualenv and installing
-#   patchwork's dependencies.
-#
-#   Default: true
-#
 # [*manage_database*]
 #   Installs a local MySQL server.
 #
@@ -134,61 +122,53 @@
 #  limitations under the License.
 #
 class patchwork (
-  $install_dir       = $patchwork::params::install_dir,
-  $virtualenv_dir    = $patchwork::params::virtualenv_dir,
-  $version           = $patchwork::params::version,
-  $user              = $patchwork::params::user,
-  $group             = $patchwork::params::group,
-  $source_repo       = $patchwork::params::source_repo,
-  $manage_git        = true,
-  $manage_python     = true,
-  $manage_database   = true,
+  Pattern['^\/']     $install_dir        = $patchwork::params::install_dir,
+  Pattern['^\/']     $virtualenv_dir     = $patchwork::params::virtualenv_dir,
+  Pattern['^\/']     $urlpath            = $patchwork::params::urlpath,
+  String             $version            = $patchwork::params::version,
+  String             $user               = $patchwork::params::user,
+  String             $group              = $patchwork::params::group,
+  String             $source_repo        = $patchwork::params::source_repo,
   # Database settings
-  $database_name     = $patchwork::params::database_name,
-  $database_host     = $patchwork::params::database_host,
-  $database_user     = $patchwork::params::database_user,
-  $database_pass     = $patchwork::params::database_pass,
-  $database_tag      = $patchwork::params::database_tag,
-  $uwsgi_overrides   = {},
-  $collect_exported  = $patchwork::params::collect_exported,
-  $cron_minutes      = $patchwork::params::cron_minutes,
-) inherits patchwork::params {
+  Boolean               $manage_database = $patchwork::params::manage_database,
+  Enum['pgsql','mysql'] $database_flavor = $patchwork::params::database_flavor,
+  String                $database_name   = $patchwork::params::database_name,
+  String                $database_host   = $patchwork::params::database_host,
+  Integer               $database_port   = $patchwork::params::database_port,
+  String                $database_user   = $patchwork::params::database_user,
+  String                $database_pass   = $patchwork::params::database_pass,
+  String                $database_tag    = $patchwork::params::database_tag,
 
-  validate_absolute_path($install_dir)
-  validate_absolute_path($virtualenv_dir)
-  validate_string($version)
-  validate_string($user)
-  validate_string($group)
-  validate_string($source_repo)
-  validate_bool($manage_git)
-  validate_bool($manage_python)
-  validate_bool($manage_database)
-  validate_string($database_name)
-  validate_string($database_host)
-  validate_string($database_user)
-  validate_string($database_pass)
-  validate_string($database_tag)
-  validate_hash($uwsgi_overrides)
-  validate_bool($collect_exported)
-  validate_integer($cron_minutes, 59, 0)
+  Boolean               $manage_python   = $patchwork::params::manage_python,
+  String                $python_package  = $patchwork::params::python_package,
+  String                $python_version  = $patchwork::params::python_version,
+
+  Optional[Hash]        $uwsgi_overrides      = {},
+  String                $uwsgi_plugin_package = $patchwork::params::uwsgi_plugin_package,
+
+  # can be */20, for example, so not an integer
+  String                $cron_minutes      = $patchwork::params::cron_minutes,
+  Boolean               $collect_exported  = $patchwork::params::collect_exported,
+
+) inherits patchwork::params {
 
   $uwsgi_config = merge($patchwork::params::uwsgi_options, $uwsgi_overrides)
 
   anchor { 'patchwork:begin': }
   anchor { 'patchwork:end': }
 
-  include 'patchwork::install'
-  include 'patchwork::database::mysql'
-  include 'patchwork::config'
-  include 'patchwork::uwsgi'
-  include 'patchwork::cron'
+  include '::patchwork::install'
+  include '::patchwork::database'
+  include '::patchwork::config'
+  include '::patchwork::uwsgi'
+  include '::patchwork::cron'
 
-  Anchor['patchwork:begin'] ->
-    Class['patchwork::install'] ->
-    Class['patchwork::config'] ->
-    Class['patchwork::database::mysql'] ->
-    Class['patchwork::uwsgi'] ->
-    Class['patchwork::cron'] ->
-  Anchor['patchwork:end']
+  Anchor['patchwork:begin']
+    ->Class['::patchwork::install']
+    ->Class['::patchwork::database']
+    ->Class['::patchwork::config']
+    ->Class['::patchwork::uwsgi']
+    ->Class['::patchwork::cron']
+    ->Anchor['patchwork:end']
 
 }

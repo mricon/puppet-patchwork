@@ -8,6 +8,7 @@ fixtures:
       repo: 'stankevich-python'
       ref: '1.11.0'
     mysql: 'puppetlabs-mysql'
+    postgresql: 'puppetlabs-postgresql'
     uwsgi:
       repo: 'engage-uwsgi'
       ref: '1.2.0'

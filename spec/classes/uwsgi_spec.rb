@@ -17,13 +17,17 @@ describe 'patchwork', :type => 'class' do
           'application_options' => {
             'virtualenv' => '/opt/patchwork/venv',
             'chdir'      => '/opt/patchwork',
+            'pythonpath' => '/opt/patchwork',
+            'module'     => 'patchwork.wsgi:application',
+            'manage-script-name' => true,
+            'mount' => '/=patchwork.wsgi:application',
+            'static-map' => '/static=/opt/patchwork/htdocs',
             'logto'      => '/var/log/patchwork/uwsgi.log',
             'master'     => true,
             'http-socket' => ':9000',
-            'static-map' => '/static=/opt/patchwork/htdocs',
-            'wsgi-file' => 'patchwork.wsgi',
             'processes' => 4,
-            'threads' => 2,
+            'threads'   => 2,
+            'plugins'   =>'python3',
           }
         })
       }
@@ -32,22 +36,27 @@ describe 'patchwork', :type => 'class' do
       let(:params) {{
         :uwsgi_overrides => {
             'http-socket' => ':2222',
+            'mount' => '/patchwork=patchwork.wsgi:application',
             'master' => false,
             'threads' => 8,
         }
       }}
       it { should contain_uwsgi__app('patchwork')
            .with({
-             'application_options' => {
-               'virtualenv'  => '/opt/patchwork/venv',
-               'chdir'       => '/opt/patchwork',
-               'logto'       => '/var/log/patchwork/uwsgi.log',
-               'master'      => false,
-               'http-socket' => ':2222',
-               'static-map'  => '/static=/opt/patchwork/htdocs',
-               'wsgi-file'   => 'patchwork.wsgi',
-               'processes'   => 4,
-               'threads'     => 8,
+              'application_options' => {
+                'virtualenv' => '/opt/patchwork/venv',
+                'chdir'      => '/opt/patchwork',
+                'pythonpath' => '/opt/patchwork',
+                'module'     => 'patchwork.wsgi:application',
+                'manage-script-name' => true,
+                'mount' => '/patchwork=patchwork.wsgi:application',
+                'static-map' => '/static=/opt/patchwork/htdocs',
+                'logto'      => '/var/log/patchwork/uwsgi.log',
+                'master'     => false,
+                'http-socket' => ':2222',
+                'processes' => 4,
+                'threads'   => 8,
+                'plugins'   =>'python3',
              }
            })
       }

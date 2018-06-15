@@ -24,7 +24,6 @@ describe 'patchwork::config', :type => 'class' do
       :time_zone => 'US/PST',
       :from_email => '<foo@example.com>',
       :notification_delay => '20',
-      :language_code => 'American/New_York',
       :patches_per_page => '80',
       :language_code => 'fi-SE',
       :cache_timeout => 'None',

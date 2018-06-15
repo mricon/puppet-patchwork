@@ -25,27 +25,42 @@
 class patchwork::params {
   $install_dir      = '/opt/patchwork'
   $virtualenv_dir   = '/opt/patchwork/venv'
+  $urlpath          = '/'
   $version          = 'master'
   $user             = 'patchwork'
   $group            = 'patchwork'
   $source_repo      = 'git://github.com/getpatchwork/patchwork'
+  $manage_database  = false
+  $database_flavor  = 'mysql'
   $database_name    = 'patchwork'
   $database_host    = 'localhost'
+  $database_port    = 3306
   $database_user    = 'patchwork'
   $database_pass    = 'patchwork'
-  $database_tag     = 'mysql-patchwork'
+  $database_tag     = "${database_flavor}-patchwork"
+  $manage_python    = true
+  $python_package   = 'python3'
+  $python_version   = '3'
+
   $uwsgi_options    = {
-    virtualenv  => '/opt/patchwork/venv',
-    chdir       => '/opt/patchwork',
-    static-map  => '/static=/opt/patchwork/htdocs',
-    logto       => '/var/log/patchwork/uwsgi.log',
-    master      => true,
-    http-socket => ':9000',
-    wsgi-file   => 'patchwork.wsgi',
-    processes   => 4,
-    threads     => 2,
+    virtualenv         => $virtualenv_dir,
+    chdir              => $install_dir,
+    pythonpath         => $install_dir,
+    module             => 'patchwork.wsgi:application',
+    manage-script-name => true,
+    mount              => '/=patchwork.wsgi:application',
+    static-map         => '/static=/opt/patchwork/htdocs',
+    logto              => '/var/log/patchwork/uwsgi.log',
+    master             => true,
+    http-socket        => ':9000',
+    processes          => 4,
+    threads            => 2,
+    plugins            => 'python3',
   }
+
+  $uwsgi_plugin_package = 'uwsgi-plugin-python3'
+
   $collect_exported = false
-  $cron_minutes     = 10
+  $cron_minutes     = '10'
   $selinux_module_source = 'puppet:///modules/patchwork/mypatchwork.te'
 }
