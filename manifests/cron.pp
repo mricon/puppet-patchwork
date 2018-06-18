@@ -6,10 +6,11 @@
 # === Authors
 #
 # Trevor Bramwell <tbramwell@linuxfoundation.org>
+# Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 #
 # === Copyright
 #
-# Copyright 2015 Trevor Bramwell
+# Copyright (C) 2015-2018 by The Linux Foundation
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -24,7 +25,6 @@
 #  limitations under the License.
 #
 class patchwork::cron {
-
   cron { 'patchwork':
     ensure      => present,
     command     => "${patchwork::virtualenv_dir}/bin/python ${patchwork::install_dir}/manage.py cron",

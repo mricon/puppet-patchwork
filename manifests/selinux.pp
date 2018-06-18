@@ -2,19 +2,14 @@
 #
 # Manages selinux policy files for Patchwork
 #
-# === Parameters
-#
-# [*module_source*]
-#   Location of a patchwork selinux module to override the one provided
-#   by puppet
-#
 # === Authors
 #
 # Trevor Bramwell <tbramwell@linuxfoundation.org>
+# Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 #
 # === Copyright
 #
-# Copyright 2015 Trevor Bramwell
+# Copyright (C) 2015-2018 by The Linux Foundation
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -28,42 +23,42 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::selinux (
-  $module_source = $patchwork::params::selinux_module_source
-) inherits patchwork::params {
+class patchwork::selinux {
+  include ::patchwork
 
-  include ::selinux::base
+  if $patchwork::manage_selinux {
+    include ::selinux::base
 
-  selboolean { 'httpd_can_network_connect_db':
-    persistent => true,
-    value      => 'on',
+    selboolean { 'httpd_can_network_connect_db':
+      persistent => true,
+      value      => 'on',
+    }
+
+    selinux::module {'mypatchwork':
+      source => 'puppet:///modules/patchwork/mypatchwork.te',
+    }
+
+    selinux::fcontext { '/usr/sbin/uwsgi':
+      ensure => present,
+      setype => 'httpd_exec_t',
+    }
+
+    selinux::fcontext { '/var/run/uwsgi':
+      ensure    => present,
+      recursive => true,
+      setype    => 'httpd_var_run_t',
+    }
+
+    selinux::fcontext { '/var/log/uwsgi':
+      ensure    => present,
+      recursive => true,
+      setype    => 'httpd_log_t',
+    }
+
+    selinux::fcontext { '/var/log/patchwork':
+      ensure    => present,
+      recursive => true,
+      setype    => 'httpd_log_t',
+    }
   }
-
-  selinux::module {'mypatchwork':
-    source => $module_source,
-  }
-
-  selinux::fcontext { '/usr/sbin/uwsgi':
-    ensure => present,
-    setype => 'httpd_exec_t',
-  }
-
-  selinux::fcontext { '/var/run/uwsgi':
-    ensure    => present,
-    recursive => true,
-    setype    => 'httpd_var_run_t',
-  }
-
-  selinux::fcontext { '/var/log/uwsgi':
-    ensure    => present,
-    recursive => true,
-    setype    => 'httpd_log_t',
-  }
-
-  selinux::fcontext { '/var/log/patchwork':
-    ensure    => present,
-    recursive => true,
-    setype    => 'httpd_log_t',
-  }
-
 }

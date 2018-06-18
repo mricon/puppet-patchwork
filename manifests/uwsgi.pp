@@ -2,24 +2,14 @@
 #
 # Manages the configuration of uwsgi
 #
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# * `sample variable`
-#  Explanation of how this variable affects the function of this class and if
-#  it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#  External Node Classifier as a comma separated list of hostnames." (Note,
-#  global variables should be avoided in favor of class parameters as
-#  of Puppet 2.6.)
-#
 # === Authors
 #
 # Trevor Bramwell <tbramwell@linuxfoundation.org>
+# Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 #
 # === Copyright
 #
-# Copyright 2015 Trevor Bramwell
+# Copyright (C) 2015-2018 by The Linux Foundation
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.

@@ -1,12 +1,12 @@
 {
-  "name": "bramwelt-patchwork",
-  "version": "0.4.0",
-  "author": "bramwelt",
+  "name": "mricon-patchwork",
+  "version": "2.0.0",
+  "author": "mricon",
   "summary": "Web-based patch tracking system designed to facilitate the contribution and management of contributions to open-source projects",
   "license": "Apache-2.0",
-  "source": "https://github.com/bramwelt/puppet-patchwork",
-  "project_page": "https://github.com/bramwelt/puppet-patchwork",
-  "issues_url": "https://github.com/bramwelt/puppet-patchwork/issues",
+  "source": "https://github.com/mricon/puppet-patchwork",
+  "project_page": "https://github.com/mricon/puppet-patchwork",
+  "issues_url": "https://github.com/mricon/puppet-patchwork/issues",
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",

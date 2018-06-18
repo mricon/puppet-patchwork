@@ -42,14 +42,4 @@ describe 'patchwork::selinux', :type => 'class' do
       })
     }
   end
-  context 'with custom module_source' do
-    let(:params) {{
-      :module_source => 'puppet:///modules/foo/policy.bar',
-    }}
-    it { should contain_selinux__module('mypatchwork')
-      .with({
-        'source' => 'puppet:///modules/foo/policy.bar',
-      })
-    }
-  end
 end

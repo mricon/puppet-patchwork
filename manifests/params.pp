@@ -5,10 +5,11 @@
 # === Authors
 #
 # Trevor Bramwell <tbramwell@linuxfoundation.org>
+# Konstantin Ryabitsev <konstantin@linuxfoundation.org>
 #
 # === Copyright
 #
-# Copyright 2015 Trevor Bramwell
+# Copyright (C) 2015-2018 by The Linux Foundation
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -48,8 +49,8 @@ class patchwork::params {
     pythonpath         => $install_dir,
     module             => 'patchwork.wsgi:application',
     manage-script-name => true,
-    mount              => '/=patchwork.wsgi:application',
-    static-map         => '/static=/opt/patchwork/htdocs',
+    mount              => '%(url)=%(module)',
+    static-map         => "/static=${install_dir}/static",
     logto              => '/var/log/patchwork/uwsgi.log',
     master             => true,
     http-socket        => ':9000',
@@ -62,5 +63,5 @@ class patchwork::params {
 
   $collect_exported = false
   $cron_minutes     = '10'
-  $selinux_module_source = 'puppet:///modules/patchwork/mypatchwork.te'
+  $manage_selinux   = true
 }

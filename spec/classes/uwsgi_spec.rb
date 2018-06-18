@@ -20,8 +20,8 @@ describe 'patchwork', :type => 'class' do
             'pythonpath' => '/opt/patchwork',
             'module'     => 'patchwork.wsgi:application',
             'manage-script-name' => true,
-            'mount' => '/=patchwork.wsgi:application',
-            'static-map' => '/static=/opt/patchwork/htdocs',
+            'mount' => '%(url)=%(module)',
+            'static-map' => '/static=/opt/patchwork/static',
             'logto'      => '/var/log/patchwork/uwsgi.log',
             'master'     => true,
             'http-socket' => ':9000',
@@ -36,7 +36,7 @@ describe 'patchwork', :type => 'class' do
       let(:params) {{
         :uwsgi_overrides => {
             'http-socket' => ':2222',
-            'mount' => '/patchwork=patchwork.wsgi:application',
+            'mount' => '%(url)=%(module)',
             'master' => false,
             'threads' => 8,
         }
@@ -49,8 +49,8 @@ describe 'patchwork', :type => 'class' do
                 'pythonpath' => '/opt/patchwork',
                 'module'     => 'patchwork.wsgi:application',
                 'manage-script-name' => true,
-                'mount' => '/patchwork=patchwork.wsgi:application',
-                'static-map' => '/static=/opt/patchwork/htdocs',
+                'mount' => '%(url)=%(module)',
+                'static-map' => '/static=/opt/patchwork/static',
                 'logto'      => '/var/log/patchwork/uwsgi.log',
                 'master'     => false,
                 'http-socket' => ':2222',

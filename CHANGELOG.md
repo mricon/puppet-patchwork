@@ -1,5 +1,12 @@
 # Changelog
 
+## 2018-06-18 - v2.0.0
+
+* Rewrite for patchwork-2.1 and Python3
+  This is a pretty significant rewrite, so the module should be considered
+  incompatible with the module written for patchwork-1.0.0 by Trevor.
+* Add support for posgresql databases
+
 ## 2016-06-17 - v0.4.0
 
 * Add Cache Configuration to settings.py
