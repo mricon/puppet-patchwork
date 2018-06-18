@@ -37,9 +37,9 @@ class patchwork::database::mysql {
     python_enable => true,
   }
 
-  python::pip { 'MySQL-Python':
-    ensure     => '1.2.5',
-    pkgname    => 'MySQL-Python',
+  python::pip { 'mysqlclient':
+    ensure     => '1.3.12',
+    pkgname    => 'mysqlclient',
     virtualenv => $patchwork::virtualenv_dir,
     owner      => $patchwork::user,
     require    => [
