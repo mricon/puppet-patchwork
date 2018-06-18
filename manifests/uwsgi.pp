@@ -1,4 +1,4 @@
-# == Class: patchwork::uwsgi
+# == Class: patchwork2::uwsgi
 #
 # Manages the configuration of uwsgi
 #
@@ -23,32 +23,32 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::uwsgi {
+class patchwork2::uwsgi {
 
   include ::uwsgi
 
-  if (has_key($patchwork::uwsgi_config, 'logto')) {
-    $log_dir = dirname($patchwork::uwsgi_config['logto'])
+  if (has_key($patchwork2::uwsgi_config, 'logto')) {
+    $log_dir = dirname($patchwork2::uwsgi_config['logto'])
     validate_absolute_path($log_dir)
 
     file { $log_dir:
       ensure => 'directory',
-      owner  => $patchwork::user,
-      group  => $patchwork::group,
+      owner  => $patchwork2::user,
+      group  => $patchwork2::group,
     }
   }
 
-  package { $patchwork::uwsgi_plugin_package:
+  package { $patchwork2::uwsgi_plugin_package:
     ensure => present,
   }
 
   uwsgi::app { 'patchwork':
     ensure              => 'present',
-    uid                 => $patchwork::user,
-    gid                 => $patchwork::group,
-    application_options => $patchwork::uwsgi_config,
+    uid                 => $patchwork2::user,
+    gid                 => $patchwork2::group,
+    application_options => $patchwork2::uwsgi_config,
     require             => [
-      Package[$patchwork::uwsgi_plugin_package],
+      Package[$patchwork2::uwsgi_plugin_package],
     ],
   }
 

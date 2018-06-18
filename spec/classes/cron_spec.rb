@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'patchwork', :type => 'class' do
+describe 'patchwork2', :type => 'class' do
   context 'with defaults for parameters used by cron' do
     it { should compile }
     it { should contain_cron('patchwork').with(

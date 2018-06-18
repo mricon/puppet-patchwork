@@ -1,4 +1,4 @@
-# patchwork
+# patchwork2
 
 #### Table of Contents
 
@@ -11,7 +11,7 @@
 
 ## Overview
 
-[![Build Status](https://travis-ci.org/mricon/puppet-patchwork.png)](https://travis-ci.org/mricon/puppet-patchwork)
+[![Build Status](https://travis-ci.org/mricon/puppet-patchwork2.png)](https://travis-ci.org/mricon/puppet-patchwork2)
 
 A Puppet module for managing deployments of
 [Patchwork](http://http://jk.ozlabs.org/projects/patchwork/) - the
@@ -23,13 +23,13 @@ To use this module you can either directly include it in your module
 tree, or add the following to your `Puppetfile`:
 
 ```
-  mod 'mricon-patchwork'
+  mod 'mricon-patchwork2'
 ```
 
 A node should then be assigned the relevant patchwork classes.
 
 ```puppet
-  class { 'patchwork':
+  class { 'patchwork2':
     version => 'v2.1.0'
   }
   class { 'patchwork::config':

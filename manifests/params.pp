@@ -1,4 +1,4 @@
-# == Class: patchwork::params
+# == Class: patchwork2::params
 #
 # Parameter definition for patchwork. See init.pp for documentation.
 #
@@ -23,7 +23,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::params {
+class patchwork2::params {
   $install_dir      = '/opt/patchwork'
   $virtualenv_dir   = '/opt/patchwork/venv'
   $urlpath          = '/'

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'patchwork::config', :type => 'class' do
+describe 'patchwork2::config', :type => 'class' do
   context 'with defaults for all parameters' do
     it { should compile }
     it { should contain_file('/opt/patchwork/patchwork/settings/production.py')

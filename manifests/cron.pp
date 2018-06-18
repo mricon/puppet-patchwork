@@ -1,4 +1,4 @@
-# == Class: patchwork::cron
+# == Class: patchwork2::cron
 #
 # Manages patchworks' cron job for expiring registrations and sending patch
 # change notification
@@ -24,13 +24,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::cron {
+class patchwork2::cron {
   cron { 'patchwork':
     ensure      => present,
-    command     => "${patchwork::virtualenv_dir}/bin/python ${patchwork::install_dir}/manage.py cron",
+    command     => "${patchwork2::virtualenv_dir}/bin/python ${patchwork2::install_dir}/manage.py cron",
     environment => 'PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin',
-    user        => $patchwork::user,
-    minute      => "*/${patchwork::cron_minutes}",
+    user        => $patchwork2::user,
+    minute      => "*/${patchwork2::cron_minutes}",
   }
 
 }

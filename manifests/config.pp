@@ -1,4 +1,4 @@
-# == Class: patchwork::config
+# == Class: patchwork2::config
 #
 # Manages the Patchwork settings file
 #
@@ -109,7 +109,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::config (
+class patchwork2::config (
   String               $secret_key         = '__default_value',
   String               $time_zone          = 'Etc/UTC',
   String               $language_code      = 'en_US',
@@ -123,18 +123,18 @@ class patchwork::config (
   Hash                 $cache_options      = {},
   Hash                 $admins             = {},
   Array                $allowed_hosts      = [],
-  String               $notification_delay = $patchwork::cron_minutes,
-) inherits patchwork {
+  String               $notification_delay = $patchwork2::cron_minutes,
+) inherits patchwork2 {
 
   if $secret_key == '__default_value' {
     fail('You MUST set secret_key to a non-default value')
   }
 
-  file { "${patchwork::install_dir}/patchwork/settings/production.py":
+  file { "${patchwork2::install_dir}/patchwork/settings/production.py":
     ensure    => file,
     mode      => '0644',
-    owner     => $patchwork::user,
-    group     => $patchwork::group,
+    owner     => $patchwork2::user,
+    group     => $patchwork2::group,
     content   => template("${module_name}/settings.py.erb"),
     show_diff => false,
   }

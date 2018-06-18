@@ -1,6 +1,6 @@
 ---
-patchwork::install_dir: /opt/patchwork
-patchwork::config::secret_key: 'example'
+patchwork2::install_dir: /opt/patchwork
+patchwork2::config::secret_key: 'example'
 
 uwsgi::install_pip: false
 uwsgi::install_python_dev: false

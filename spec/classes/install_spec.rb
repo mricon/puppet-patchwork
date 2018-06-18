@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'patchwork', :type => 'class' do
+describe 'patchwork2', :type => 'class' do
   context 'install' do
     context 'with defaults for all parameters' do
       it { should contain_class('git') }

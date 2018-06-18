@@ -1,4 +1,4 @@
-# == Class: patchwork::install
+# == Class: patchwork2::install
 #
 # Manages the installation of Patchwork
 #
@@ -23,12 +23,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::install {
+class patchwork2::install {
   include ::git
 
-  if $patchwork::manage_python {
+  if $patchwork2::manage_python {
     class { '::python':
-      version    => $patchwork::python_package,
+      version    => $patchwork2::python_package,
       dev        => true,
       pip        => true,
       virtualenv => true,
@@ -37,63 +37,63 @@ class patchwork::install {
   }
 
   # Create a virtualenv and install patchwork's requirements.txt
-  python::pyvenv { $patchwork::virtualenv_dir:
-    version => $patchwork::python_version,
-    owner   => $patchwork::user,
-    group   => $patchwork::group,
+  python::pyvenv { $patchwork2::virtualenv_dir:
+    version => $patchwork2::python_version,
+    owner   => $patchwork2::user,
+    group   => $patchwork2::group,
     require => [
       Class['::python'],
-      Vcsrepo[$patchwork::install_dir],
+      Vcsrepo[$patchwork2::install_dir],
     ],
   }
 
   python::requirements { '/opt/patchwork/requirements-prod.txt':
-    virtualenv => $patchwork::virtualenv_dir,
-    owner      => $patchwork::user,
-    group      => $patchwork::group,
+    virtualenv => $patchwork2::virtualenv_dir,
+    owner      => $patchwork2::user,
+    group      => $patchwork2::group,
     require    => [
       Class['::python'],
-      Python::Pyvenv[$patchwork::virtualenv_dir],
-      Vcsrepo[$patchwork::install_dir],
+      Python::Pyvenv[$patchwork2::virtualenv_dir],
+      Vcsrepo[$patchwork2::install_dir],
     ],
   }
 
   # If 'latest' version is given the repo will track master and keep up
   # to date; provided patchwork uses master as their development branch
-  case $patchwork::version {
+  case $patchwork2::version {
     'latest': {
       $vcsrepo_ensure = 'latest'
       $revision       = 'master'
     }
     default: {
       $vcsrepo_ensure = 'present'
-      $revision       = $patchwork::version
+      $revision       = $patchwork2::version
     }
   }
 
   user { 'patchwork':
     ensure  => present,
     comment => 'User for managing Patchwork',
-    name    => $patchwork::user,
-    home    => $patchwork::install_dir,
+    name    => $patchwork2::user,
+    home    => $patchwork2::install_dir,
     system  => true,
   }
 
-  file { $patchwork::install_dir:
+  file { $patchwork2::install_dir:
     ensure => 'directory',
-    owner  => $patchwork::user,
-    group  => $patchwork::group,
+    owner  => $patchwork2::user,
+    group  => $patchwork2::group,
   }
 
-  vcsrepo { $patchwork::install_dir:
+  vcsrepo { $patchwork2::install_dir:
     ensure   => $vcsrepo_ensure,
     provider => 'git',
-    user     => $patchwork::user,
-    group    => $patchwork::group,
-    source   => $patchwork::source_repo,
+    user     => $patchwork2::user,
+    group    => $patchwork2::group,
+    source   => $patchwork2::source_repo,
     revision => $revision,
     force    => true,
-    require  => File[$patchwork::install_dir],
+    require  => File[$patchwork2::install_dir],
   }
 
   file { '/etc/logrotate.d/patchwork':

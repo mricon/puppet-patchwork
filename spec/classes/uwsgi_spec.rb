@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe 'patchwork', :type => 'class' do
+describe 'patchwork2', :type => 'class' do
   context 'uwsgi' do
     context 'with defaults for all parameters' do
       it { should compile }
-      it { should contain_class('patchwork::uwsgi') }
+      it { should contain_class('patchwork2::uwsgi') }
       it { should contain_class('uwsgi') }
       it { should contain_file('/var/log/patchwork')
            .with({

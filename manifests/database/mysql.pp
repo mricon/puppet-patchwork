@@ -1,4 +1,4 @@
-# == Class: patchwork::database::mysql
+# == Class: patchwork2::database::mysql
 #
 # Creates the patchwork database on a local or remote mysql server.
 #
@@ -23,8 +23,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::database::mysql {
-  include ::patchwork
+class patchwork2::database::mysql {
+  include ::patchwork2
 
   # Manually install mariadb-devel until mysql module updates with the code
   # that fixes this.
@@ -41,29 +41,29 @@ class patchwork::database::mysql {
   python::pip { 'mysqlclient':
     ensure     => '1.3.12',
     pkgname    => 'mysqlclient',
-    virtualenv => $patchwork::virtualenv_dir,
-    owner      => $patchwork::user,
+    virtualenv => $patchwork2::virtualenv_dir,
+    owner      => $patchwork2::user,
     require    => [
       Class['python'],
-      Python::Pyvenv[$patchwork::virtualenv_dir],
+      Python::Pyvenv[$patchwork2::virtualenv_dir],
     ],
   }
 
-  if $patchwork::manage_database {
-    if $patchwork::collect_exported {
+  if $patchwork2::manage_database {
+    if $patchwork2::collect_exported {
       @@mysql::db { "patchwork_${::fqdn}":
-        user     => $patchwork::database_user,
-        password => $patchwork::database_pass,
-        dbname   => $patchwork::database_name,
+        user     => $patchwork2::database_user,
+        password => $patchwork2::database_pass,
+        dbname   => $patchwork2::database_name,
         host     => $::ipaddress,
-        tag      => $patchwork::database_tag,
+        tag      => $patchwork2::database_tag,
       }
     } else {
       include ::mysql::server
       mysql::db { 'patchwork':
         ensure   => 'present',
-        user     => $patchwork::database_user,
-        password => $patchwork::database_pass,
+        user     => $patchwork2::database_user,
+        password => $patchwork2::database_pass,
         host     => $::ipaddress,
       }
     }

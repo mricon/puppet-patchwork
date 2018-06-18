@@ -1,4 +1,4 @@
-# == Class: patchwork::database
+# == Class: patchwork2::database
 #
 # Stub for driver-specific database classes.
 #
@@ -23,12 +23,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::database {
-  case $patchwork::database_flavor {
-    'pgsql': { include ::patchwork::database::pgsql }
-    'mysql': { include ::patchwork::database::mysql }
+class patchwork2::database {
+  case $patchwork2::database_flavor {
+    'pgsql': { include ::patchwork2::database::pgsql }
+    'mysql': { include ::patchwork2::database::mysql }
     default: {
-      fail("Database driver ${patchwork::database_flavor} is not supported with ${module_name}")
+      fail("Database driver ${patchwork2::database_flavor} is not supported with ${module_name}")
     }
   }
 }

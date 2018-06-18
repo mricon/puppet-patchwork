@@ -1,12 +1,13 @@
 require 'spec_helper'
 
-describe 'patchwork', :type => 'class' do
+describe 'patchwork2', :type => 'class' do
   context 'with defaults for all parameters' do
-    it { should contain_class('patchwork') }
-    it { should contain_class('patchwork::install') }
-    it { should contain_class('patchwork::database::mysql') }
-    it { should contain_class('patchwork::config') }
-    it { should contain_class('patchwork::cron') }
+    it { should contain_class('patchwork2') }
+    it { should contain_class('patchwork2::install') }
+    it { should contain_class('patchwork2::database::mysql') }
+    it { should contain_class('patchwork2::config') }
+    it { should contain_class('patchwork2::selinux') }
+    it { should contain_class('patchwork2::cron') }
     it { should contain_class('mysql::bindings')
            .with('python_enable' => true) }
 

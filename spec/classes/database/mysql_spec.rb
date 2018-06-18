@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'patchwork::database::mysql', :type => 'class' do
+describe 'patchwork2::database::mysql', :type => 'class' do
   let :pre_condition do
       'Mysql::Db <<| |>>'
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'patchwork::selinux', :type => 'class' do
+describe 'patchwork2::selinux', :type => 'class' do
   context 'with defaults for parameters used by selinux' do
     it { should compile }
     it { should contain_selboolean('httpd_can_network_connect_db')

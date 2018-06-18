@@ -1,4 +1,4 @@
-# == Class: patchwork::database::pgsql
+# == Class: patchwork2::database::pgsql
 #
 # Creates the patchwork database on a local or remote pgsql server.
 #
@@ -23,13 +23,13 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::database::pgsql {
+class patchwork2::database::pgsql {
   include ::patchwork
 
   # Managing pgsql databases is too complicated, so we are going
   # to just include the server here and let you do the rest via your
   # profile/hiera.
-  if $patchwork::manage_database {
+  if $patchwork2::manage_database {
     include ::postgresql::server
   }
 }

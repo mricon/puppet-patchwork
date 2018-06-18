@@ -1,4 +1,4 @@
-# == Class: patchwork::selinux
+# == Class: patchwork2::selinux
 #
 # Manages selinux policy files for Patchwork
 #
@@ -23,10 +23,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork::selinux {
-  include ::patchwork
+class patchwork2::selinux {
+  include ::patchwork2
 
-  if $patchwork::manage_selinux {
+  if $patchwork2::manage_selinux {
     include ::selinux::base
 
     selboolean { 'httpd_can_network_connect_db':
