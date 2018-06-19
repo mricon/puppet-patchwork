@@ -63,5 +63,4 @@ class patchwork2::params {
 
   $collect_exported = false
   $cron_minutes     = '10'
-  $manage_selinux   = true
 }

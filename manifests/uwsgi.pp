@@ -35,6 +35,7 @@ class patchwork2::uwsgi {
       ensure => 'directory',
       owner  => $patchwork2::user,
       group  => $patchwork2::group,
+      seltype => 'httpd_log_t',
     }
   }
 

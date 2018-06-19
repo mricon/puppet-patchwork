@@ -6,7 +6,6 @@ describe 'patchwork2', :type => 'class' do
     it { should contain_class('patchwork2::install') }
     it { should contain_class('patchwork2::database::mysql') }
     it { should contain_class('patchwork2::config') }
-    it { should contain_class('patchwork2::selinux') }
     it { should contain_class('patchwork2::cron') }
     it { should contain_class('mysql::bindings')
            .with('python_enable' => true) }

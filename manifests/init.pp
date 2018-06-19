@@ -51,8 +51,6 @@ class patchwork2 (
   Optional[Hash]        $uwsgi_overrides      = {},
   String                $uwsgi_plugin_package = $patchwork2::params::uwsgi_plugin_package,
 
-  Boolean               $manage_selinux   = $patchwork2::params::manage_selinux,
-
   String                $cron_minutes     = $patchwork2::params::cron_minutes,
   Boolean               $collect_exported = $patchwork2::params::collect_exported,
 
@@ -67,7 +65,6 @@ class patchwork2 (
   include '::patchwork2::database'
   include '::patchwork2::config'
   include '::patchwork2::uwsgi'
-  include '::patchwork2::selinux'
   include '::patchwork2::cron'
 
   Anchor['patchwork:begin']
@@ -75,7 +72,6 @@ class patchwork2 (
     ->Class['::patchwork2::database']
     ->Class['::patchwork2::config']
     ->Class['::patchwork2::uwsgi']
-    ->Class['::patchwork2::selinux']
     ->Class['::patchwork2::cron']
     ->Anchor['patchwork:end']
 

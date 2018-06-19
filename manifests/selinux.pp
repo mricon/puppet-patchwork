@@ -2,6 +2,12 @@
 #
 # Manages selinux policy files for Patchwork
 #
+# === Parameters
+#
+# [*module_source*]
+#   Location of a patchwork selinux module to override the one provided
+#   by puppet
+#
 # === Authors
 #
 # Trevor Bramwell <tbramwell@linuxfoundation.org>
@@ -23,42 +29,42 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-class patchwork2::selinux {
-  include ::patchwork2
+class patchwork2::selinux (
+  $module_source = 'puppet:///modules/patchwork/mypatchwork.te'
+) inherits patchwork2 {
 
-  if $patchwork2::manage_selinux {
-    include ::selinux::base
+  include ::selinux::base
 
-    selboolean { 'httpd_can_network_connect_db':
-      persistent => true,
-      value      => 'on',
-    }
-
-    selinux::module {'mypatchwork':
-      source => 'puppet:///modules/patchwork/mypatchwork.te',
-    }
-
-    selinux::fcontext { '/usr/sbin/uwsgi':
-      ensure => present,
-      setype => 'httpd_exec_t',
-    }
-
-    selinux::fcontext { '/var/run/uwsgi':
-      ensure    => present,
-      recursive => true,
-      setype    => 'httpd_var_run_t',
-    }
-
-    selinux::fcontext { '/var/log/uwsgi':
-      ensure    => present,
-      recursive => true,
-      setype    => 'httpd_log_t',
-    }
-
-    selinux::fcontext { '/var/log/patchwork':
-      ensure    => present,
-      recursive => true,
-      setype    => 'httpd_log_t',
-    }
+  selboolean { 'httpd_can_network_connect_db':
+    persistent => true,
+    value      => 'on',
   }
+
+  selinux::module {'mypatchwork':
+    source => $module_source,
+  }
+
+  selinux::fcontext { '/usr/sbin/uwsgi':
+    ensure => present,
+    setype => 'httpd_exec_t',
+  }
+
+  selinux::fcontext { '/var/run/uwsgi':
+    ensure    => present,
+    recursive => true,
+    setype    => 'httpd_var_run_t',
+  }
+
+  selinux::fcontext { '/var/log/uwsgi':
+    ensure    => present,
+    recursive => true,
+    setype    => 'httpd_log_t',
+  }
+
+  selinux::fcontext { '/var/log/patchwork':
+    ensure    => present,
+    recursive => true,
+    setype    => 'httpd_log_t',
+  }
+
 }
