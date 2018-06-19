@@ -32,9 +32,9 @@ class patchwork2::uwsgi {
     validate_absolute_path($log_dir)
 
     file { $log_dir:
-      ensure => 'directory',
-      owner  => $patchwork2::user,
-      group  => $patchwork2::group,
+      ensure  => 'directory',
+      owner   => $patchwork2::user,
+      group   => $patchwork2::group,
       seltype => 'httpd_log_t',
     }
   }
