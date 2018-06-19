@@ -58,8 +58,8 @@ class patchwork2 (
 
   $uwsgi_config = merge($patchwork2::params::uwsgi_options, $uwsgi_overrides)
 
-  anchor { 'patchwork:begin': }
-  anchor { 'patchwork:end': }
+  anchor { 'patchwork2:begin': }
+  anchor { 'patchwork2:end': }
 
   include '::patchwork2::install'
   include '::patchwork2::database'
@@ -67,12 +67,12 @@ class patchwork2 (
   include '::patchwork2::uwsgi'
   include '::patchwork2::cron'
 
-  Anchor['patchwork:begin']
+  Anchor['patchwork2:begin']
     ->Class['::patchwork2::install']
     ->Class['::patchwork2::database']
     ->Class['::patchwork2::config']
     ->Class['::patchwork2::uwsgi']
     ->Class['::patchwork2::cron']
-    ->Anchor['patchwork:end']
+    ->Anchor['patchwork2:end']
 
 }

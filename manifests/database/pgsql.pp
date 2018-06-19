@@ -24,7 +24,7 @@
 #  limitations under the License.
 #
 class patchwork2::database::pgsql {
-  include ::patchwork
+  include ::patchwork2
 
   # Managing pgsql databases is too complicated, so we are going
   # to just include the server here and let you do the rest via your
