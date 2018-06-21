@@ -33,7 +33,7 @@ describe 'patchwork2', :type => 'class' do
           'user'   => 'patchwork',
           'group'  => 'patchwork',
           'source' => 'git://github.com/getpatchwork/patchwork',
-          'revision' => 'master',
+          'revision' => '2.1.0',
         })
       }
       it { should contain_file('/etc/logrotate.d/patchwork')
