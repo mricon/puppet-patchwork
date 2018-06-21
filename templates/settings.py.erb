@@ -127,46 +127,6 @@ COMPAT_REDIR = True
 # is terminated upstream of the server (e.g. at the load balancer)
 FORCE_HTTPS_LINKS = <%= @force_https_links %>
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.WatchedFileHandler',
-            'filename': '/var/log/patchwork/patchwork.log',
-            'formatter': 'verbose',
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'filters': ['require_debug_false'],
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'django.request': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
-
 # Replace EMAIL_BACKEND with this setting to keep Patchwork from sending emails
 #  EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 #  EMAIL_FILE_PATH = '/var/log/patchwork/email.log'
