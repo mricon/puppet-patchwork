@@ -39,7 +39,7 @@ class patchwork2::database::mysql {
   }
 
   python::pip { 'mysqlclient':
-    ensure     => '1.3.12',
+    ensure     => present,
     pkgname    => 'mysqlclient',
     virtualenv => $patchwork2::virtualenv_dir,
     owner      => $patchwork2::user,
